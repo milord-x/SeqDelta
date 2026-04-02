@@ -1,0 +1,62 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "seqdelta"
+version = "0.1.0"
+description = "DNA mutation analysis with codon and protein consequence reporting."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [
+  { name = "SeqDelta Contributors" }
+]
+keywords = ["bioinformatics", "genetics", "dna", "mutation-analysis", "biopython"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+dependencies = [
+  "biopython==1.85",
+  "fastapi==0.115.12",
+  "jinja2==3.1.6",
+  "plotly==6.0.1",
+  "python-multipart==0.0.20",
+  "rich==14.0.0",
+  "typer==0.15.2",
+  "uvicorn==0.34.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest==8.3.5",
+]
+
+[project.urls]
+Homepage = "https://github.com/milord-x/SeqDelta"
+Repository = "https://github.com/milord-x/SeqDelta"
+Issues = "https://github.com/milord-x/SeqDelta/issues"
+
+[project.scripts]
+seqdelta = "cli:app"
+
+[tool.setuptools]
+include-package-data = true
+py-modules = ["cli", "app"]
+
+[tool.setuptools.packages.find]
+include = ["seqdelta*"]
+
+[tool.setuptools.package-data]
+seqdelta = ["assets/templates/*.html", "assets/static/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

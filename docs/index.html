@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SeqDelta</title>
+  <style>
+    :root {
+      --bg: #edf3fb;
+      --panel: rgba(255,255,255,0.9);
+      --text: #0f172a;
+      --muted: #475569;
+      --blue: #2563eb;
+      --amber: #f59e0b;
+      --green: #16a34a;
+      --orange: #f97316;
+      --red: #dc2626;
+      --purple: #7c3aed;
+      --shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(37, 99, 235, 0.14), transparent 24%),
+        radial-gradient(circle at top right, rgba(245, 158, 11, 0.14), transparent 22%),
+        linear-gradient(180deg, #f8fbff 0%, #edf3fb 55%, #e6eef8 100%);
+    }
+    .shell {
+      width: min(1180px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 32px 0 56px;
+    }
+    .hero, .card {
+      background: var(--panel);
+      border: 1px solid rgba(255,255,255,0.7);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+    .hero {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 24px;
+      padding: 36px;
+      margin-bottom: 24px;
+    }
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--blue);
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      font-size: .75rem;
+      font-weight: 700;
+    }
+    h1 {
+      margin: 0 0 14px;
+      font-size: clamp(2.2rem, 5vw, 4.4rem);
+      line-height: .95;
+      letter-spacing: -.05em;
+    }
+    h2 {
+      margin: 0 0 10px;
+      font-size: 1.45rem;
+      letter-spacing: -.03em;
+    }
+    p, li {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 700;
+      border: 1px solid rgba(15,23,42,.12);
+      background: rgba(255,255,255,.72);
+      color: var(--text);
+    }
+    .button.primary {
+      border: none;
+      color: #fff;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--amber) 100%);
+    }
+    .code-window {
+      border-radius: 24px;
+      overflow: hidden;
+      background: linear-gradient(180deg, #0b1221 0%, #101827 100%);
+      color: #d8e0ef;
+    }
+    .code-header {
+      display: flex;
+      gap: 8px;
+      padding: 16px 18px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .code-header span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.28);
+    }
+    pre {
+      margin: 0;
+      padding: 24px;
+      white-space: pre-wrap;
+      font-family: "IBM Plex Mono", "JetBrains Mono", monospace;
+      line-height: 1.65;
+      font-size: .96rem;
+    }
+    .grid {
+      display: grid;
+      gap: 20px;
+      margin-top: 24px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .card {
+      padding: 24px;
+    }
+    .feature-list {
+      margin: 0;
+      padding-left: 20px;
+    }
+    .pipeline {
+      display: grid;
+      gap: 12px;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.72);
+      border: 1px solid rgba(15,23,42,.08);
+    }
+    .step strong {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      color: #fff;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--amber) 100%);
+    }
+    code.inline {
+      padding: 2px 6px;
+      border-radius: 8px;
+      background: rgba(15,23,42,.06);
+      color: var(--text);
+    }
+    .shots {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .shot {
+      border-radius: 22px;
+      min-height: 220px;
+      padding: 18px;
+      background: linear-gradient(180deg, rgba(37,99,235,.08), rgba(245,158,11,.08));
+      border: 1px dashed rgba(15,23,42,.14);
+    }
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .tag {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.72);
+      border: 1px solid rgba(15,23,42,.08);
+      font-size: .92rem;
+    }
+    @media (max-width: 900px) {
+      .hero, .grid, .shots { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">SeqDelta</p>
+        <h1>DNA mutation analysis + protein impact interpretation</h1>
+        <p>
+          SeqDelta compares a reference DNA sequence and a mutant DNA sequence, performs explicit alignment,
+          detects substitutions, insertions, and deletions, then separates nucleotide-level events from codon
+          and protein consequences in a presentation-grade report.
+        </p>
+        <div class="tag-row">
+          <span class="tag">CLI install in one line</span>
+          <span class="tag">Standalone HTML report</span>
+          <span class="tag">FastAPI browser UI</span>
+          <span class="tag">Bioinformatics MVP</span>
+        </div>
+        <div class="button-row">
+          <a class="button primary" href="https://github.com/milord-x/SeqDelta">View on GitHub</a>
+          <a class="button" href="#usage">Install and run</a>
+        </div>
+      </div>
+      <div class="code-window">
+        <div class="code-header"><span></span><span></span><span></span></div>
+        <pre>pip install git+https://github.com/milord-x/SeqDelta.git
+
+seqdelta compare reference.fasta mutant.fasta --html-report report.html
+
+Output:
+- alignment
+- mutation table
+- codon changes
+- amino acid effects
+- standalone HTML report</pre>
+      </div>
+    </section>
+
+    <section class="grid">
+      <article class="card">
+        <p class="eyebrow">What it does</p>
+        <h2>Mutation analysis for real FASTA inputs</h2>
+        <ul class="feature-list">
+          <li>Parses arbitrary FASTA files from NCBI or manual mutation edits</li>
+          <li>Runs explicit global pairwise alignment</li>
+          <li>Detects substitution, insertion, and deletion events</li>
+          <li>Classifies silent, missense, nonsense, and frameshift effects</li>
+          <li>Exports HTML, JSON, and CSV outputs</li>
+        </ul>
+      </article>
+      <article class="card">
+        <p class="eyebrow">How it works</p>
+        <h2>Simple pipeline</h2>
+        <div class="pipeline">
+          <div class="step"><strong>1</strong><div>Load reference and mutant FASTA files.</div></div>
+          <div class="step"><strong>2</strong><div>Run global pairwise alignment across the DNA sequences.</div></div>
+          <div class="step"><strong>3</strong><div>Detect nucleotide-level mutation events.</div></div>
+          <div class="step"><strong>4</strong><div>Translate codons and interpret protein-level consequences.</div></div>
+          <div class="step"><strong>5</strong><div>Render a browser-grade report for screenshots, demos, or class presentations.</div></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="grid" id="usage">
+      <article class="card">
+        <p class="eyebrow">CLI usage</p>
+        <h2>Install and run in one line</h2>
+        <pre>pip install git+https://github.com/milord-x/SeqDelta.git</pre>
+        <pre>seqdelta compare reference.fasta mutant.fasta --html-report report.html</pre>
+        <p>
+          After installation, the primary CLI is <code class="inline">seqdelta</code>. The repo still keeps
+          <code class="inline">python cli.py</code> as a fallback for local development.
+        </p>
+      </article>
+      <article class="card">
+        <p class="eyebrow">Web interface</p>
+        <h2>Local FastAPI app</h2>
+        <pre>python app.py</pre>
+        <p>
+          Launch the local browser interface to upload reference and mutant FASTA files and generate the
+          same analysis through a visual scientific dashboard.
+        </p>
+      </article>
+    </section>
+
+    <section class="card" style="margin-top:24px;">
+      <p class="eyebrow">Features</p>
+      <h2>Designed for GitHub, demos, and student portfolio use</h2>
+      <div class="tag-row">
+        <span class="tag">Nucleotide-level vs protein-level separation</span>
+        <span class="tag">Mutation-centered alignment snippets</span>
+        <span class="tag">Key mutation interpretation</span>
+        <span class="tag">Color-coded biological effect classes</span>
+        <span class="tag">CLI + web interface from shared core logic</span>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top:24px;">
+      <p class="eyebrow">Example output</p>
+      <h2>HTML report screenshots</h2>
+      <div class="shots">
+        <div class="shot">
+          <strong>Report dashboard</strong>
+          <p>Placeholder for overall summary cards, input context, and interpretation panel.</p>
+        </div>
+        <div class="shot">
+          <strong>Mutation-focused alignment</strong>
+          <p>Placeholder for centered mutation snippets with highlighted sequence windows.</p>
+        </div>
+        <div class="shot">
+          <strong>Tables and charts</strong>
+          <p>Placeholder for the mutation table, codon comparison, amino acid view, and plots.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

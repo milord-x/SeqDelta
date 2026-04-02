@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main class="page-shell landing-shell">
+  <section class="hero-card">
+    <div class="hero-copy">
+      <p class="eyebrow">SeqDelta</p>
+      <h1>Mutation analysis for DNA sequence comparison, protein consequence interpretation, and presentation-grade reporting.</h1>
+      <p class="hero-lead">
+        Upload a reference FASTA and a mutant FASTA. SeqDelta performs explicit global alignment, detects nucleotide-level changes,
+        separates codon and amino acid consequences, and renders a scientific dashboard you can show in class, on GitHub, or in a demo.
+      </p>
+      <div class="hero-metrics">
+        <div class="metric-pill">Pairwise alignment</div>
+        <div class="metric-pill">Codon translation</div>
+        <div class="metric-pill">Frameshift detection</div>
+        <div class="metric-pill">HTML + JSON export</div>
+      </div>
+    </div>
+    <div class="hero-panel">
+      <div class="science-window">
+        <div class="science-window__header">
+          <span></span><span></span><span></span>
+        </div>
+        <pre class="science-window__code">reference  ATGGAATTTCCGTGGAAATAA
+delta      ││││•││││││││││││││││
+mutant     ATGGACTTTCCGTGGAAATAA
+
+mutation   SUB-0001  pos 6  A → C
+codon      GAA → GAC
+protein    E → D
+effect     missense</pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="upload-card">
+    <div class="section-heading">
+      <p class="eyebrow">Browser Interface</p>
+      <h2>Upload two FASTA files</h2>
+      <p>Run a local analysis and open a screenshot-ready report in the browser.</p>
+    </div>
+    <form class="upload-grid" action="/analyze" method="post" enctype="multipart/form-data">
+      <label class="upload-field">
+        <span>Reference FASTA</span>
+        <input type="file" name="reference_fasta" accept=".fa,.fasta,.txt" required>
+      </label>
+      <label class="upload-field">
+        <span>Mutant FASTA</span>
+        <input type="file" name="mutant_fasta" accept=".fa,.fasta,.txt" required>
+      </label>
+      <button type="submit" class="primary-button">Analyze mutation profile</button>
+    </form>
+  </section>
+
+  <section class="feature-grid">
+    <article class="feature-card">
+      <h3>Nucleotide layer</h3>
+      <p>Substitutions, insertions, and deletions are tracked directly from the aligned DNA sequences.</p>
+    </article>
+    <article class="feature-card">
+      <h3>Protein layer</h3>
+      <p>Codons and amino acids are separated from raw sequence differences so the biological impact stays explicit.</p>
+    </article>
+    <article class="feature-card">
+      <h3>Visual report</h3>
+      <p>Mutation map, density overview, aligned viewer, and filterable tables make the result easy to present.</p>
+    </article>
+  </section>
+</main>
+{% endblock %}

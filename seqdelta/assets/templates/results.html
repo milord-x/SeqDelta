@@ -1,0 +1,386 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main class="page-shell">
+  <section class="results-hero">
+    <div>
+      <p class="eyebrow">SeqDelta Results</p>
+      <h1>Reference vs mutant mutation dashboard</h1>
+      <p class="hero-lead">
+        Nucleotide-level differences, codon changes, and protein consequences are separated below so the biological interpretation stays explicit.
+      </p>
+    </div>
+    <div class="hero-actions">
+      {% if not standalone_report %}
+      <a class="ghost-button" href="/">Run another analysis</a>
+      {% endif %}
+      {% if download_links.html %}
+      <a class="primary-button" href="{{ download_links.html }}" download>Download HTML report</a>
+      {% endif %}
+      {% if download_links.json %}
+      <a class="ghost-button" href="{{ download_links.json }}" download>Download JSON</a>
+      {% endif %}
+      {% if download_links.csv %}
+      <a class="ghost-button" href="{{ download_links.csv }}" download>Download CSV</a>
+      {% endif %}
+    </div>
+  </section>
+
+  <section class="content-card">
+    <div class="section-heading">
+      <p class="eyebrow">Input files</p>
+      <h2>Analysis context</h2>
+      <p>File names and FASTA headers are shown separately so identical NCBI sequence names do not hide which input is reference and which is mutant.</p>
+    </div>
+    <div class="input-grid">
+      <article class="context-card">
+        <span class="context-label">Reference file</span>
+        <strong>{{ input_summary.reference_file }}</strong>
+        <span class="context-subtle">FASTA header</span>
+        <code>{{ input_summary.reference_header }}</code>
+        <span class="context-subtle">Length</span>
+        <strong>{{ input_summary.reference_length }} nt</strong>
+      </article>
+      <article class="context-card">
+        <span class="context-label">Mutant file</span>
+        <strong>{{ input_summary.mutant_file }}</strong>
+        <span class="context-subtle">FASTA header</span>
+        <code>{{ input_summary.mutant_header }}</code>
+        <span class="context-subtle">Length</span>
+        <strong>{{ input_summary.mutant_length }} nt</strong>
+      </article>
+      <article class="context-card context-card--accent">
+        <span class="context-label">Detected mutations</span>
+        <strong>{{ input_summary.mutation_count }}</strong>
+        <span class="context-subtle">Alignment identity</span>
+        <strong>{{ "%.1f"|format(summary.identity * 100) }}%</strong>
+      </article>
+    </div>
+    <div class="list-card">
+      <span class="context-label">Input files</span>
+      <ul class="plain-list">
+        <li>reference: {{ input_summary.reference_file }}</li>
+        <li>mutant: {{ input_summary.mutant_file }}</li>
+        <li>sequence lengths: {{ input_summary.reference_length }} nt vs {{ input_summary.mutant_length }} nt</li>
+        <li>detected mutations: {{ input_summary.mutation_count }}</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="card-grid metrics-grid">
+    <article class="metric-card">
+      <p>Total mutations</p>
+      <strong>{{ summary.total_mutations }}</strong>
+    </article>
+    <article class="metric-card">
+      <p>Substitutions</p>
+      <strong>{{ summary.substitutions }}</strong>
+    </article>
+    <article class="metric-card">
+      <p>Insertions</p>
+      <strong>{{ summary.insertions }}</strong>
+    </article>
+    <article class="metric-card">
+      <p>Deletions</p>
+      <strong>{{ summary.deletions }}</strong>
+    </article>
+    <article class="metric-card effect-silent">
+      <p>Silent</p>
+      <strong>{{ summary.silent }}</strong>
+    </article>
+    <article class="metric-card effect-missense">
+      <p>Missense</p>
+      <strong>{{ summary.missense }}</strong>
+    </article>
+    <article class="metric-card effect-nonsense">
+      <p>Nonsense</p>
+      <strong>{{ summary.nonsense }}</strong>
+    </article>
+    <article class="metric-card effect-frameshift">
+      <p>Frameshift</p>
+      <strong>{{ summary.frameshift }}</strong>
+    </article>
+  </section>
+
+  <section class="insight-grid">
+    <article class="insight-card">
+      <div>
+        <p class="eyebrow">Interpretation</p>
+        <h2>Biological reading</h2>
+      </div>
+      <p>{{ effect_interpretation }}</p>
+      <div class="tag-row">
+        <span class="tag">Alignment columns {{ summary.alignment_columns }}</span>
+        <span class="tag">Identity {{ "%.1f"|format(summary.identity * 100) }}%</span>
+      </div>
+    </article>
+    {% if key_mutation %}
+    <article class="insight-card key-card">
+      <div>
+        <p class="eyebrow">Key mutation</p>
+        <h2>Highest-impact event</h2>
+      </div>
+      <div class="key-grid">
+        <div><span>Position</span><strong>{{ key_mutation.mutation.position }}</strong></div>
+        <div><span>Nucleotide</span><strong>{{ key_mutation.mutation.ref_nt }} -> {{ key_mutation.mutation.mut_nt }}</strong></div>
+        <div><span>Codon</span><strong>{{ key_mutation.mutation.ref_codon or "-" }} -> {{ key_mutation.mutation.mut_codon or "-" }}</strong></div>
+        <div><span>Amino acid</span><strong>{{ key_mutation.mutation.ref_aa or "-" }} -> {{ key_mutation.mutation.mut_aa or "-" }}</strong></div>
+        <div><span>Effect</span><strong>{{ key_mutation.effect_label }}</strong></div>
+      </div>
+      <p>{{ key_mutation.effect_explanation }}</p>
+    </article>
+    {% endif %}
+  </section>
+
+  <section class="card-grid plot-grid">
+    <article class="chart-card">
+      <div class="section-heading">
+        <p class="eyebrow">Visualization</p>
+        <h2>Linear mutation map</h2>
+      </div>
+      {{ visuals.mutation_map | safe }}
+    </article>
+    {% if visuals.mutation_density %}
+    <article class="chart-card">
+      <div class="section-heading">
+        <p class="eyebrow">Visualization</p>
+        <h2>Mutation density</h2>
+      </div>
+      {{ visuals.mutation_density | safe }}
+    </article>
+    {% else %}
+    <article class="chart-card note-card">
+      <div class="section-heading">
+        <p class="eyebrow">Visualization</p>
+        <h2>Mutation density</h2>
+      </div>
+      <p>Hidden automatically because the mutation count is too low for a meaningful density plot.</p>
+    </article>
+    {% endif %}
+    <article class="chart-card chart-card--wide">
+      <div class="section-heading">
+        <p class="eyebrow">Visualization</p>
+        <h2>Effect distribution</h2>
+      </div>
+      {{ visuals.effect_distribution | safe }}
+    </article>
+  </section>
+
+  <section class="content-card">
+    <div class="section-heading">
+      <p class="eyebrow">Alignment UX</p>
+      <h2>Switch between full and mutation-focused alignment</h2>
+      <p>Use the focused view for quick interpretation and the full view for complete sequence inspection.</p>
+    </div>
+    <div class="view-toggle">
+      <button class="toggle-button is-active" type="button" data-view-trigger="focused">Mutation-focused alignment</button>
+      <button class="toggle-button" type="button" data-view-trigger="full">Full alignment</button>
+    </div>
+
+    <div class="view-panel" data-view-panel="focused">
+      <div class="focus-grid">
+        {% for focus in mutation_focus_views %}
+        <article class="focus-card">
+          <div class="focus-header">
+            <div>
+              <p class="eyebrow">Position {{ focus.mutation.position }}</p>
+              <h3>{{ focus.mutation.mutation_type.title() }} · {{ focus.effect_label }}</h3>
+            </div>
+            <span class="effect-chip effect-chip--{{ focus.mutation.effect or 'unchanged' }}">{{ focus.effect_label }}</span>
+          </div>
+          <div class="focus-snippet">
+            <span class="snippet-label">Ref</span>
+            <code>{{ focus.reference.leading }}{{ focus.reference.prefix }}<mark class="mark-{{ focus.mutation.mutation_type }}">{{ focus.reference.focus }}</mark>{{ focus.reference.suffix }}{{ focus.reference.trailing }}</code>
+          </div>
+          <div class="focus-snippet">
+            <span class="snippet-label">Mut</span>
+            <code>{{ focus.mutant.leading }}{{ focus.mutant.prefix }}<mark class="mark-{{ focus.mutation.mutation_type }}">{{ focus.mutant.focus }}</mark>{{ focus.mutant.suffix }}{{ focus.mutant.trailing }}</code>
+          </div>
+          <div class="focus-meta">
+            <span>Nucleotide {{ focus.mutation.ref_nt }} -> {{ focus.mutation.mut_nt }}</span>
+            <span>Codon {{ focus.mutation.ref_codon or "-" }} -> {{ focus.mutation.mut_codon or "-" }}</span>
+            <span>AA {{ focus.mutation.ref_aa or "-" }} -> {{ focus.mutation.mut_aa or "-" }}</span>
+          </div>
+          <p>{{ focus.effect_explanation }}</p>
+        </article>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="view-panel is-hidden" data-view-panel="full">
+      <div class="alignment-legend">
+        <span class="legend-item match">Match</span>
+        <span class="legend-item substitution">Substitution</span>
+        <span class="legend-item insertion">Insertion</span>
+        <span class="legend-item deletion">Deletion</span>
+      </div>
+      <div class="alignment-viewer">
+        {% for block in alignment_blocks %}
+        <div class="alignment-block">
+          <div class="alignment-label">Ref {{ block.ref_start }}-{{ block.ref_end }}</div>
+          <div class="alignment-line">
+            {% for cell in block.cells %}
+            <span class="nt {{ cell.class_name }}">{{ cell.ref_nt }}</span>
+            {% endfor %}
+          </div>
+          <div class="alignment-label">Δ</div>
+          <div class="alignment-line alignment-line--markers">
+            {% for cell in block.cells %}
+            <span class="nt {{ cell.class_name }}">{{ cell.marker }}</span>
+            {% endfor %}
+          </div>
+          <div class="alignment-label">Mut {{ block.mut_start }}-{{ block.mut_end }}</div>
+          <div class="alignment-line">
+            {% for cell in block.cells %}
+            <span class="nt {{ cell.class_name }}">{{ cell.mut_nt }}</span>
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section class="content-card">
+    <div class="section-heading">
+      <p class="eyebrow">Nucleotide layer</p>
+      <h2>Mutation event table</h2>
+      <p>Direct sequence-level differences from the pairwise alignment.</p>
+    </div>
+    <div class="table-controls" data-filter-root>
+      <select data-filter-type>
+        <option value="">All mutation types</option>
+        <option value="substitution">Substitutions</option>
+        <option value="insertion">Insertions</option>
+        <option value="deletion">Deletions</option>
+      </select>
+      <select data-filter-effect>
+        <option value="">All effects</option>
+        <option value="silent">Silent</option>
+        <option value="missense">Missense</option>
+        <option value="nonsense">Nonsense</option>
+        <option value="frameshift">Frameshift</option>
+        <option value="inframe_insertion">In-frame insertion</option>
+        <option value="inframe_deletion">In-frame deletion</option>
+      </select>
+      <input type="search" placeholder="Search codon, position, or residue" data-filter-search>
+    </div>
+    <div class="table-wrap">
+      <table class="science-table" data-filter-table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Position</th>
+            <th>Ref nt</th>
+            <th>Mut nt</th>
+            <th>Mutation type</th>
+            <th>Ref codon</th>
+            <th>Mut codon</th>
+            <th>Ref aa</th>
+            <th>Mut aa</th>
+            <th>Effect</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if result.nucleotide_mutations %}
+            {% for mutation in result.nucleotide_mutations %}
+            <tr data-type="{{ mutation.mutation_type }}" data-effect="{{ mutation.effect or '' }}">
+              <td>{{ mutation.mutation_id }}</td>
+              <td>{{ mutation.position }}</td>
+              <td>{{ mutation.ref_nt }}</td>
+              <td>{{ mutation.mut_nt }}</td>
+              <td><span class="type-chip type-chip--{{ mutation.mutation_type }}">{{ mutation.mutation_type }}</span></td>
+              <td>{{ mutation.ref_codon or "-" }}</td>
+              <td>{{ mutation.mut_codon or "-" }}</td>
+              <td>{{ mutation.ref_aa or "-" }}</td>
+              <td>{{ mutation.mut_aa or "-" }}</td>
+              <td><span class="effect-chip effect-chip--{{ mutation.effect or 'unchanged' }}">{{ (mutation.effect or 'n/a').replace('_', ' ') }}</span></td>
+            </tr>
+            {% endfor %}
+          {% else %}
+          <tr>
+            <td colspan="10">No mutations detected.</td>
+          </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="content-card">
+    <div class="section-heading">
+      <p class="eyebrow">Codon layer</p>
+      <h2>Codon comparison</h2>
+      <p>Reading-frame aware comparison between translated codon triplets.</p>
+    </div>
+    <div class="table-wrap">
+      <table class="science-table compact-table">
+        <thead>
+          <tr>
+            <th>Codon index</th>
+            <th>Reference codon</th>
+            <th>Mutant codon</th>
+            <th>Reference aa</th>
+            <th>Mutant aa</th>
+            <th>Effect</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if changed_codons %}
+            {% for codon in changed_codons %}
+            <tr>
+              <td>{{ codon.codon_index }}</td>
+              <td>{{ codon.ref_codon or "-" }}</td>
+              <td>{{ codon.mut_codon or "-" }}</td>
+              <td>{{ codon.ref_aa or "-" }}</td>
+              <td>{{ codon.mut_aa or "-" }}</td>
+              <td><span class="effect-chip effect-chip--{{ codon.effect }}">{{ codon.effect.replace('_', ' ') }}</span></td>
+            </tr>
+            {% endfor %}
+          {% else %}
+          <tr>
+            <td colspan="6">No codon-level changes detected.</td>
+          </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="content-card">
+    <div class="section-heading">
+      <p class="eyebrow">Protein layer</p>
+      <h2>Amino acid comparison</h2>
+      <p>Protein consequences separated from nucleotide-level mutation calls.</p>
+    </div>
+    <div class="table-wrap">
+      <table class="science-table compact-table">
+        <thead>
+          <tr>
+            <th>AA index</th>
+            <th>Reference aa</th>
+            <th>Mutant aa</th>
+            <th>Effect</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if changed_amino_acids %}
+            {% for aa in changed_amino_acids %}
+            <tr>
+              <td>{{ aa.aa_index }}</td>
+              <td>{{ aa.ref_aa or "-" }}</td>
+              <td>{{ aa.mut_aa or "-" }}</td>
+              <td><span class="effect-chip effect-chip--{{ aa.effect }}">{{ aa.effect.replace('_', ' ') }}</span></td>
+            </tr>
+            {% endfor %}
+          {% else %}
+          <tr>
+            <td colspan="4">No amino acid changes detected.</td>
+          </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+{% endblock %}

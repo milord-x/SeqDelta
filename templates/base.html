@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ report_title }}</title>
+  {% if standalone_report %}
+  <style>{{ inline_css }}</style>
+  {% else %}
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/style.css">
+  {% endif %}
+</head>
+<body>
+  {% block content %}{% endblock %}
+  {% if standalone_report %}
+  <script>{{ inline_js }}</script>
+  {% else %}
+  <script src="/static/app.js"></script>
+  {% endif %}
+</body>
+</html>
