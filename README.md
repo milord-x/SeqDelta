@@ -122,12 +122,7 @@ Development fixtures are kept in [sample_data/](sample_data/).
 
 ## Screenshots
 
-Placeholder assets are included in [screenshots/](screenshots/):
-
-- ![Upload page placeholder](screenshots/upload-page-placeholder.svg)
-- ![Results dashboard placeholder](screenshots/results-dashboard-placeholder.svg)
-- ![Mutation table placeholder](screenshots/mutation-table-placeholder.svg)
-- ![Alignment view placeholder](screenshots/alignment-view-placeholder.svg)
+![Demo](screenshots/recording.gif)
 
 Recommended real captures:
 
