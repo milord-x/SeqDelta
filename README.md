@@ -1,64 +1,30 @@
 # SeqDelta
 
-SeqDelta is an educational, exploratory bioinformatics tool for sequence-level mutation analysis. It compares a reference DNA FASTA sequence against a mutant DNA FASTA sequence, performs explicit pairwise alignment, separates nucleotide-level differences from codon and protein consequences, and exports the result as a polished terminal summary, standalone HTML report, JSON, and CSV.
+SeqDelta is an educational, exploratory bioinformatics tool for sequence-level mutation analysis. It compares a reference DNA FASTA sequence against a mutant DNA FASTA sequence, performs explicit pairwise alignment, separates nucleotide-level differences from codon and protein consequences, and exports the result as terminal output, standalone HTML, JSON, and CSV.
 
-SeqDelta is designed for:
+SeqDelta is intended for:
 
 - classroom demos
 - student portfolios
 - exploratory sequence comparison
 - lightweight local analysis workflows
 
-It is not positioned as a clinical, diagnostic, or transcript-annotation tool.
+It is not a clinical or diagnostic tool.
 
-## What SeqDelta Does
+## Features
 
-- Parses one DNA FASTA record from a reference file and one DNA FASTA record from a mutant file
-- Runs explicit global pairwise alignment
-- Detects substitutions, insertions, and deletions at the nucleotide level
-- Separates sequence events from codon-level and amino-acid-level consequences
-- Classifies silent, missense, nonsense, frameshift, and in-frame indel outcomes
-- Generates a modern local web report for presentation and screenshots
-- Exports machine-readable JSON and CSV outputs for downstream inspection
+- One-record FASTA input for reference and mutant sequences
+- Global pairwise alignment
+- Nucleotide-level mutation detection
+- Codon-level consequence mapping
+- Protein-level consequence comparison
+- Effect classification for silent, missense, nonsense, frameshift, and in-frame indels
+- CLI-first workflow with optional local web interface
+- HTML, JSON, and CSV exports
 
 ## Installation
 
-Install directly from GitHub:
-
-```bash
-pip install git+https://github.com/milord-x/SeqDelta.git
-```
-
-After installation, the primary interface is the `seqdelta` command:
-
-```bash
-seqdelta compare reference.fasta mutant.fasta --html-report report.html
-```
-
-## Download and Setup
-
-Choose the setup path that matches how you want to use SeqDelta.
-
-### Option 1: Download the source code
-
-Clone the repository if you want the full project locally:
-
-```bash
-cd /home/proxy/Projects
-git clone https://github.com/milord-x/SeqDelta.git
-cd SeqDelta
-```
-
-This gives you:
-
-- the full source code
-- the example FASTA files
-- the local web interface
-- the test suite
-
-### Option 2: Install only the CLI
-
-If you only want the command-line tool:
+Install the CLI directly from GitHub:
 
 ```bash
 pip install git+https://github.com/milord-x/SeqDelta.git
@@ -70,12 +36,20 @@ Then run:
 seqdelta compare reference.fasta mutant.fasta --html-report report.html
 ```
 
-### Option 3: Full local setup for CLI + web
+## Download the Project
 
-If you want the repository locally and also want a clean environment for both CLI and the local web app:
+If you want the full repository locally:
 
 ```bash
-cd /home/proxy/Projects
+git clone https://github.com/milord-x/SeqDelta.git
+cd SeqDelta
+```
+
+## Full Local Setup
+
+If you want both the CLI and the local web app in a clean environment:
+
+```bash
 git clone https://github.com/milord-x/SeqDelta.git
 cd SeqDelta
 python -m venv .venv
@@ -83,45 +57,18 @@ source .venv/bin/activate
 pip install -e .
 ```
 
-After that:
-
-- CLI works with `seqdelta compare ...`
-- the local web app works with `python app.py`
-
-### Verify the installation
-
-Check that the CLI is available:
+Verify the install:
 
 ```bash
 seqdelta --help
 seqdelta compare --help
 ```
 
-Launch the local web app:
-
-```bash
-python app.py
-```
-
-Then open:
-
-```text
-http://127.0.0.1:8000
-```
-
 ## Quick Demo
-
-Run the included missense example:
 
 ```bash
 seqdelta compare examples/reference.fasta examples/missense.fasta --html-report demo.html
 ```
-
-This generates:
-
-- a terminal summary
-- a standalone HTML report at `demo.html`
-- optional JSON and CSV if requested
 
 ## CLI Usage
 
@@ -131,17 +78,10 @@ Basic comparison:
 seqdelta compare reference.fasta mutant.fasta
 ```
 
-Rich terminal output plus all export formats:
+Export all major formats:
 
 ```bash
 seqdelta compare reference.fasta mutant.fasta --protein-view --json-out results.json --csv-out mutations.csv --html-report report.html
-```
-
-Useful help commands:
-
-```bash
-seqdelta --help
-seqdelta compare --help
 ```
 
 Current CLI options:
@@ -154,7 +94,7 @@ Current CLI options:
 
 ## Local Web App
 
-Launch the local FastAPI app:
+Run the local FastAPI app:
 
 ```bash
 python app.py
@@ -166,53 +106,34 @@ Then open:
 http://127.0.0.1:8000
 ```
 
-The local web interface supports:
-
-- reference FASTA upload
-- mutant FASTA upload
-- browser-based results dashboard
-- mutation summary cards
-- mutation-centered alignment snippets
-- full alignment view
-- downloadable HTML, JSON, and CSV outputs
+The local web interface supports FASTA upload, browser-based result viewing, and downloadable HTML, JSON, and CSV outputs.
 
 ## Example Data
 
-The repository includes ready-to-run FASTA files in [`examples/`](/home/proxy/Projects/SeqDelta/examples):
+Ready-to-run FASTA files are included in [examples/](examples/):
 
-- [`reference.fasta`](/home/proxy/Projects/SeqDelta/examples/reference.fasta) - baseline reference sequence
-- [`substitution.fasta`](/home/proxy/Projects/SeqDelta/examples/substitution.fasta) - single-nucleotide substitution example
-- [`missense.fasta`](/home/proxy/Projects/SeqDelta/examples/missense.fasta) - codon change with amino-acid substitution
-- [`silent.fasta`](/home/proxy/Projects/SeqDelta/examples/silent.fasta) - codon change without amino-acid change
-- [`frameshift.fasta`](/home/proxy/Projects/SeqDelta/examples/frameshift.fasta) - insertion-based frameshift example
+- [reference.fasta](examples/reference.fasta)
+- [substitution.fasta](examples/substitution.fasta)
+- [missense.fasta](examples/missense.fasta)
+- [silent.fasta](examples/silent.fasta)
+- [frameshift.fasta](examples/frameshift.fasta)
 
-The original development fixtures remain in [`sample_data/`](/home/proxy/Projects/SeqDelta/sample_data).
+Development fixtures are kept in [sample_data/](sample_data/).
 
 ## Screenshots
 
-Placeholder assets are included in [`screenshots/`](/home/proxy/Projects/SeqDelta/screenshots) so the repository is ready for real captures later.
+Placeholder assets are included in [screenshots/](screenshots/):
 
-Upload page placeholder:
+- ![Upload page placeholder](screenshots/upload-page-placeholder.svg)
+- ![Results dashboard placeholder](screenshots/results-dashboard-placeholder.svg)
+- ![Mutation table placeholder](screenshots/mutation-table-placeholder.svg)
+- ![Alignment view placeholder](screenshots/alignment-view-placeholder.svg)
 
-![Upload page placeholder](/home/proxy/Projects/SeqDelta/screenshots/upload-page-placeholder.svg)
+Recommended real captures:
 
-Results dashboard placeholder:
-
-![Results dashboard placeholder](/home/proxy/Projects/SeqDelta/screenshots/results-dashboard-placeholder.svg)
-
-Mutation table placeholder:
-
-![Mutation table placeholder](/home/proxy/Projects/SeqDelta/screenshots/mutation-table-placeholder.svg)
-
-Alignment view placeholder:
-
-![Alignment view placeholder](/home/proxy/Projects/SeqDelta/screenshots/alignment-view-placeholder.svg)
-
-Recommended real captures to replace these placeholders:
-
-- landing/upload page
-- full results dashboard
-- nucleotide mutation table
+- upload page
+- results dashboard
+- mutation table
 - mutation-focused alignment view
 
 ## Project Structure
@@ -221,71 +142,38 @@ Recommended real captures to replace these placeholders:
 SeqDelta/
 ├── app.py
 ├── cli.py
-├── screenshots/
 ├── examples/
+├── screenshots/
 ├── pyproject.toml
 ├── README.md
 ├── sample_data/
 ├── seqdelta/
-│   ├── alignment.py
-│   ├── cli.py
-│   ├── models.py
-│   ├── mutation.py
-│   ├── parser.py
-│   ├── report.py
-│   ├── translation.py
-│   ├── visualization.py
-│   ├── web.py
-│   └── assets/
 ├── static/
 ├── templates/
 └── tests/
 ```
 
-## Output Modes
-
-SeqDelta currently supports:
-
-- CLI-first terminal analysis
-- local web dashboard for browser-based presentation
-- standalone HTML report generation
-- JSON export
-- CSV export
-
 ## Limitations
 
-SeqDelta is intentionally lightweight and sequence-centric. Current limitations are explicit:
-
-- It assumes the coding frame starts at nucleotide position 1.
-- It does not accept CDS annotations or reading-frame offsets.
-- It has no transcript or exon awareness.
-- Codon consequence mapping is sequence-based rather than annotation-based.
-- It expects one FASTA record per file.
-- It is designed for DNA sequence comparison, not full genome annotation workflows.
-- It does not implement HGVS normalization or clinical variant interpretation.
-- It is not suitable for diagnostic or clinical decision-making.
+- Assumes the coding frame starts at nucleotide position 1
+- No CDS annotation or reading-frame offset input
+- No transcript or exon awareness
+- Codon consequence mapping is sequence-based
+- Expects one FASTA record per file
+- No HGVS normalization or clinical interpretation
+- Not suitable for diagnostic or medical use
 
 ## Positioning
 
-SeqDelta should be understood as:
+SeqDelta should be presented as:
 
 - an educational bioinformatics project
 - an exploratory sequence analysis tool
 - a sequence-level mutation comparison workflow
 
-It should not be described as a diagnostic system or medical interpretation platform.
-
-## Roadmap
-
-- configurable reading frame and coding window
-- transcript-aware consequence mapping
-- richer protein interpretation overlays
-- stronger figure export and presentation assets
-- more realistic example datasets
-
 ## Development
 
-Internal fallback command:
+Fallback local command:
 
 ```bash
 python cli.py compare examples/reference.fasta examples/missense.fasta --html-report demo.html
