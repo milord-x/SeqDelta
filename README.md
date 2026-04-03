@@ -116,23 +116,23 @@ The original development fixtures remain in [`sample_data/`](/home/proxy/Project
 
 ## Screenshots
 
-Placeholder assets are included in [`docs/screenshots/`](/home/proxy/Projects/SeqDelta/docs/screenshots) so the repository is ready for real captures later.
+Placeholder assets are included in [`screenshots/`](/home/proxy/Projects/SeqDelta/screenshots) so the repository is ready for real captures later.
 
 Upload page placeholder:
 
-![Upload page placeholder](/home/proxy/Projects/SeqDelta/docs/screenshots/upload-page-placeholder.svg)
+![Upload page placeholder](/home/proxy/Projects/SeqDelta/screenshots/upload-page-placeholder.svg)
 
 Results dashboard placeholder:
 
-![Results dashboard placeholder](/home/proxy/Projects/SeqDelta/docs/screenshots/results-dashboard-placeholder.svg)
+![Results dashboard placeholder](/home/proxy/Projects/SeqDelta/screenshots/results-dashboard-placeholder.svg)
 
 Mutation table placeholder:
 
-![Mutation table placeholder](/home/proxy/Projects/SeqDelta/docs/screenshots/mutation-table-placeholder.svg)
+![Mutation table placeholder](/home/proxy/Projects/SeqDelta/screenshots/mutation-table-placeholder.svg)
 
 Alignment view placeholder:
 
-![Alignment view placeholder](/home/proxy/Projects/SeqDelta/docs/screenshots/alignment-view-placeholder.svg)
+![Alignment view placeholder](/home/proxy/Projects/SeqDelta/screenshots/alignment-view-placeholder.svg)
 
 Recommended real captures to replace these placeholders:
 
@@ -147,9 +147,7 @@ Recommended real captures to replace these placeholders:
 SeqDelta/
 ├── app.py
 ├── cli.py
-├── docs/
-│   ├── index.html
-│   └── screenshots/
+├── screenshots/
 ├── examples/
 ├── pyproject.toml
 ├── README.md
