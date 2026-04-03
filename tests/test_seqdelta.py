@@ -1,6 +1,10 @@
+from typer.testing import CliRunner
+
+from seqdelta.cli import app as cli_app
 from seqdelta.mutation import analyze_sequences
 
 REFERENCE = "ATGGAATTTCCGTGGAAATAA"
+runner = CliRunner()
 
 
 def test_substitution_detection():
@@ -73,3 +77,24 @@ def test_identity_counts_mismatches():
     result = analyze_sequences(REFERENCE, "ATGGACTTTCCGTGGAAATAA")
     assert result.summary.identity < 1.0
     assert round(result.summary.identity * 100, 1) == 95.2
+
+
+def test_identity_counts_gap_columns():
+    result = analyze_sequences(REFERENCE, "ATGGAATTTCGTGGAAATAA")
+    assert result.summary.identity < 1.0
+    assert round(result.summary.identity * 100, 1) == 95.2
+    assert result.summary.alignment_columns == 21
+
+
+def test_root_help_works():
+    result = runner.invoke(cli_app, ["--help"])
+    assert result.exit_code == 0
+    assert "Usage:" in result.stdout
+    assert "compare" in result.stdout
+
+
+def test_compare_help_works():
+    result = runner.invoke(cli_app, ["compare", "--help"])
+    assert result.exit_code == 0
+    assert "--html-report" in result.stdout
+    assert "--json-out" in result.stdout

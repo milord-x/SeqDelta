@@ -92,6 +92,7 @@ class AnalysisResult:
     codon_changes: list[CodonComparison] = field(default_factory=list)
     amino_acid_changes: list[AminoAcidComparison] = field(default_factory=list)
     summary: AnalysisSummary | None = None
+    warnings: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)

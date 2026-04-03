@@ -310,6 +310,7 @@ def build_report_context(
         "report_title": report_title,
         "result": result,
         "summary": result.summary,
+        "warnings": result.warnings,
         "input_summary": build_input_summary(result),
         "key_mutation": build_key_mutation(result),
         "alignment_blocks": build_alignment_blocks(result),

@@ -13,7 +13,11 @@ from rich.text import Text
 from .mutation import analyze_files
 from .report import build_key_mutation, describe_mutation, write_csv_report, write_html_report, write_json_report
 
-app = typer.Typer(add_completion=False, rich_markup_mode="rich", help="SeqDelta mutation analysis toolkit.")
+app = typer.Typer(
+    add_completion=False,
+    rich_markup_mode="rich",
+    help="SeqDelta mutation analysis toolkit for comparing reference and mutant FASTA sequences.",
+)
 console = Console()
 
 TYPE_STYLES = {
@@ -38,7 +42,7 @@ def _effect_text(effect: str | None) -> str:
 
 @app.callback()
 def main() -> None:
-    """SeqDelta command group."""
+    """Run SeqDelta commands."""
 
 
 def _sequence_preview(label: str, aligned_sequence: str, width: int = 96) -> Text:
@@ -93,6 +97,13 @@ def _render_summary(result) -> None:
             border_style="cyan",
         )
     )
+
+
+def _render_warnings(result) -> None:
+    if not result.warnings:
+        return
+    body = "\n".join(f"- {warning}" for warning in result.warnings)
+    console.print(Panel(body, title="Analysis Warnings", border_style="magenta"))
 
 
 def _render_input_context(reference_fasta: Path, mutant_fasta: Path, result) -> None:
@@ -209,10 +220,10 @@ def compare(
     reference_fasta: Path = typer.Argument(..., exists=True, readable=True, help="Reference FASTA file."),
     mutant_fasta: Path = typer.Argument(..., exists=True, readable=True, help="Mutant FASTA file."),
     pretty: bool = typer.Option(True, "--pretty/--plain", help="Render polished Rich terminal output."),
-    json_out: Path | None = typer.Option(None, "--json-out", help="Write structured analysis JSON."),
-    csv_out: Path | None = typer.Option(None, "--csv-out", help="Write the mutation table as CSV."),
-    html_report: Path | None = typer.Option(None, "--html-report", help="Write a standalone HTML report."),
-    protein_view: bool = typer.Option(False, "--protein-view/--no-protein-view", help="Show codon and protein tables."),
+    json_out: Path | None = typer.Option(None, "--json-out", help="Write the full structured analysis result as JSON."),
+    csv_out: Path | None = typer.Option(None, "--csv-out", help="Write the nucleotide mutation table as CSV."),
+    html_report: Path | None = typer.Option(None, "--html-report", help="Write a standalone HTML report with figures and tables."),
+    protein_view: bool = typer.Option(False, "--protein-view/--no-protein-view", help="Include codon-level and protein-level tables in terminal output."),
 ) -> None:
     """Compare a reference FASTA and a mutant FASTA."""
 
@@ -226,6 +237,7 @@ def compare(
             )
         )
         _render_input_context(reference_fasta, mutant_fasta, result)
+        _render_warnings(result)
         _render_summary(result)
         _render_key_mutation(result)
         console.print(_sequence_preview("reference", result.alignment.reference_aligned))

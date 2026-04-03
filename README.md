@@ -1,14 +1,25 @@
 # SeqDelta
 
-SeqDelta is a bioinformatics tool for DNA mutation analysis and protein impact interpretation. It compares a reference FASTA against a mutant FASTA, performs explicit pairwise alignment, detects nucleotide-level differences, translates coding consequences, and renders both terminal and browser-grade reports.
+SeqDelta is an educational, exploratory bioinformatics tool for sequence-level mutation analysis. It compares a reference DNA FASTA sequence against a mutant DNA FASTA sequence, performs explicit pairwise alignment, separates nucleotide-level differences from codon and protein consequences, and exports the result as a polished terminal summary, standalone HTML report, JSON, and CSV.
 
-The analysis is intentionally separated into three layers:
+SeqDelta is designed for:
 
-1. nucleotide-level mutations
-2. codon-level changes
-3. protein-level consequences
+- classroom demos
+- student portfolios
+- exploratory sequence comparison
+- lightweight local analysis workflows
 
-That separation carries through the CLI, the HTML report, the JSON/CSV exports, and the FastAPI web interface.
+It is not positioned as a clinical, diagnostic, or transcript-annotation tool.
+
+## What SeqDelta Does
+
+- Parses one DNA FASTA record from a reference file and one DNA FASTA record from a mutant file
+- Runs explicit global pairwise alignment
+- Detects substitutions, insertions, and deletions at the nucleotide level
+- Separates sequence events from codon-level and amino-acid-level consequences
+- Classifies silent, missense, nonsense, frameshift, and in-frame indel outcomes
+- Generates a modern local web report for presentation and screenshots
+- Exports machine-readable JSON and CSV outputs for downstream inspection
 
 ## Installation
 
@@ -18,25 +29,27 @@ Install directly from GitHub:
 pip install git+https://github.com/milord-x/SeqDelta.git
 ```
 
-After installation, the primary CLI is:
+After installation, the primary interface is the `seqdelta` command:
 
 ```bash
 seqdelta compare reference.fasta mutant.fasta --html-report report.html
 ```
 
-`python cli.py` remains available as an internal development fallback, but it is not the primary public interface.
+## Quick Demo
 
-## What SeqDelta does
+Run the included missense example:
 
-- parses arbitrary FASTA inputs, including real NCBI downloads
-- runs explicit global pairwise alignment
-- detects substitutions, insertions, and deletions
-- classifies silent, missense, nonsense, frameshift, and in-frame indel effects
-- distinguishes raw nucleotide events from codon and protein consequences
-- exports results as terminal output, JSON, CSV, and standalone HTML
-- serves a local web interface for interactive upload and presentation use
+```bash
+seqdelta compare examples/reference.fasta examples/missense.fasta --html-report demo.html
+```
 
-## CLI usage
+This generates:
+
+- a terminal summary
+- a standalone HTML report at `demo.html`
+- optional JSON and CSV if requested
+
+## CLI Usage
 
 Basic comparison:
 
@@ -44,31 +57,28 @@ Basic comparison:
 seqdelta compare reference.fasta mutant.fasta
 ```
 
-Generate HTML, JSON, and CSV outputs:
+Rich terminal output plus all export formats:
 
 ```bash
 seqdelta compare reference.fasta mutant.fasta --protein-view --json-out results.json --csv-out mutations.csv --html-report report.html
 ```
 
-Multiline form:
+Useful help commands:
 
 ```bash
-seqdelta compare \
-  reference.fasta \
-  mutant.fasta \
-  --protein-view \
-  --json-out results.json \
-  --csv-out mutations.csv \
-  --html-report report.html
-```
-
-CLI help:
-
-```bash
+seqdelta --help
 seqdelta compare --help
 ```
 
-## Web app usage
+Current CLI options:
+
+- `--json-out`
+- `--csv-out`
+- `--html-report`
+- `--protein-view`
+- `--pretty/--plain`
+
+## Local Web App
 
 Launch the local FastAPI app:
 
@@ -82,49 +92,65 @@ Then open:
 http://127.0.0.1:8000
 ```
 
-The web interface supports:
+The local web interface supports:
 
 - reference FASTA upload
 - mutant FASTA upload
-- full scientific results dashboard
-- standalone HTML export
-- JSON export
-- CSV export
+- browser-based results dashboard
+- mutation summary cards
+- mutation-centered alignment snippets
+- full alignment view
+- downloadable HTML, JSON, and CSV outputs
 
-## Example sample data
+## Example Data
 
-Sample FASTA files are included in [`sample_data/`](/home/proxy/Projects/SeqDelta/sample_data):
+The repository includes ready-to-run FASTA files in [`examples/`](/home/proxy/Projects/SeqDelta/examples):
 
-- `reference.fasta`
-- `mutant_silent.fasta`
-- `mutant_missense.fasta`
-- `mutant_nonsense.fasta`
-- `mutant_insertion_frameshift.fasta`
-- `mutant_deletion_frameshift.fasta`
+- [`reference.fasta`](/home/proxy/Projects/SeqDelta/examples/reference.fasta) - baseline reference sequence
+- [`substitution.fasta`](/home/proxy/Projects/SeqDelta/examples/substitution.fasta) - single-nucleotide substitution example
+- [`missense.fasta`](/home/proxy/Projects/SeqDelta/examples/missense.fasta) - codon change with amino-acid substitution
+- [`silent.fasta`](/home/proxy/Projects/SeqDelta/examples/silent.fasta) - codon change without amino-acid change
+- [`frameshift.fasta`](/home/proxy/Projects/SeqDelta/examples/frameshift.fasta) - insertion-based frameshift example
 
-Quick demo:
-
-```bash
-seqdelta compare sample_data/reference.fasta sample_data/mutant_missense.fasta --html-report demo.html
-```
+The original development fixtures remain in [`sample_data/`](/home/proxy/Projects/SeqDelta/sample_data).
 
 ## Screenshots
 
-Placeholder for:
+Placeholder assets are included in [`docs/screenshots/`](/home/proxy/Projects/SeqDelta/docs/screenshots) so the repository is ready for real captures later.
 
-- GitHub Pages landing page
-- browser results dashboard
+Upload page placeholder:
+
+![Upload page placeholder](/home/proxy/Projects/SeqDelta/docs/screenshots/upload-page-placeholder.svg)
+
+Results dashboard placeholder:
+
+![Results dashboard placeholder](/home/proxy/Projects/SeqDelta/docs/screenshots/results-dashboard-placeholder.svg)
+
+Mutation table placeholder:
+
+![Mutation table placeholder](/home/proxy/Projects/SeqDelta/docs/screenshots/mutation-table-placeholder.svg)
+
+Alignment view placeholder:
+
+![Alignment view placeholder](/home/proxy/Projects/SeqDelta/docs/screenshots/alignment-view-placeholder.svg)
+
+Recommended real captures to replace these placeholders:
+
+- landing/upload page
+- full results dashboard
+- nucleotide mutation table
 - mutation-focused alignment view
-- full alignment view
-- CLI terminal output
 
-## Project structure
+## Project Structure
 
 ```text
 SeqDelta/
 ├── app.py
 ├── cli.py
 ├── docs/
+│   ├── index.html
+│   └── screenshots/
+├── examples/
 ├── pyproject.toml
 ├── README.md
 ├── sample_data/
@@ -144,34 +170,53 @@ SeqDelta/
 └── tests/
 ```
 
-## GitHub Pages
+## Output Modes
 
-The project website lives in [`docs/index.html`](/home/proxy/Projects/SeqDelta/docs/index.html). Enable GitHub Pages in the repository settings and set the source to the `/docs` folder.
+SeqDelta currently supports:
+
+- CLI-first terminal analysis
+- local web dashboard for browser-based presentation
+- standalone HTML report generation
+- JSON export
+- CSV export
 
 ## Limitations
 
-- The current MVP assumes the coding frame begins at nucleotide 1.
-- The standard genetic code is used for translation.
-- One FASTA record per file is expected.
-- Complex transcript-aware annotation and HGVS normalization are not yet implemented.
-- Large structural variants and splice-aware consequences are out of scope.
-- Frameshift interpretation is sequence-based, not transcript database-driven.
+SeqDelta is intentionally lightweight and sequence-centric. Current limitations are explicit:
+
+- It assumes the coding frame starts at nucleotide position 1.
+- It does not accept CDS annotations or reading-frame offsets.
+- It has no transcript or exon awareness.
+- Codon consequence mapping is sequence-based rather than annotation-based.
+- It expects one FASTA record per file.
+- It is designed for DNA sequence comparison, not full genome annotation workflows.
+- It does not implement HGVS normalization or clinical variant interpretation.
+- It is not suitable for diagnostic or clinical decision-making.
+
+## Positioning
+
+SeqDelta should be understood as:
+
+- an educational bioinformatics project
+- an exploratory sequence analysis tool
+- a sequence-level mutation comparison workflow
+
+It should not be described as a diagnostic system or medical interpretation platform.
 
 ## Roadmap
 
-- configurable coding frame and coding window
-- transcript/exon-aware annotation
-- HGVS-style variant naming
-- protein domain overlays
-- batch processing for multiple mutant samples
-- packaged demo screenshots for the GitHub Pages site
+- configurable reading frame and coding window
+- transcript-aware consequence mapping
+- richer protein interpretation overlays
+- stronger figure export and presentation assets
+- more realistic example datasets
 
 ## Development
 
-Local fallback:
+Internal fallback command:
 
 ```bash
-python cli.py compare sample_data/reference.fasta sample_data/mutant_nonsense.fasta --protein-view
+python cli.py compare examples/reference.fasta examples/missense.fasta --html-report demo.html
 ```
 
 Run tests:

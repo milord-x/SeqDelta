@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1280" y2="720" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F8FAFC"/>
+      <stop offset="1" stop-color="#EEF2F7"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="720" fill="url(#bg)"/>
+  <circle cx="210" cy="120" r="140" fill="#E0E7FF" fill-opacity="0.8"/>
+  <rect x="88" y="60" width="1104" height="84" rx="28" fill="white" fill-opacity="0.76"/>
+  <rect x="88" y="176" width="260" height="136" rx="24" fill="white" fill-opacity="0.82"/>
+  <rect x="368" y="176" width="260" height="136" rx="24" fill="white" fill-opacity="0.82"/>
+  <rect x="648" y="176" width="260" height="136" rx="24" fill="white" fill-opacity="0.82"/>
+  <rect x="928" y="176" width="264" height="136" rx="24" fill="white" fill-opacity="0.82"/>
+  <rect x="88" y="344" width="1104" height="288" rx="28" fill="white" fill-opacity="0.82"/>
+  <text x="128" y="112" fill="#0F172A" font-family="Arial, sans-serif" font-size="30" font-weight="700">SeqDelta Results Dashboard</text>
+  <text x="128" y="387" fill="#334155" font-family="Arial, sans-serif" font-size="22">Placeholder for the web results overview with summary cards and charts</text>
+  <text x="128" y="426" fill="#64748B" font-family="Arial, sans-serif" font-size="18">Capture the full browser dashboard after running a real example analysis</text>
+  <text x="218" y="244" text-anchor="middle" fill="#1E293B" font-family="Arial, sans-serif" font-size="16" font-weight="700">Total mutations</text>
+  <text x="498" y="244" text-anchor="middle" fill="#1E293B" font-family="Arial, sans-serif" font-size="16" font-weight="700">Identity</text>
+  <text x="778" y="244" text-anchor="middle" fill="#1E293B" font-family="Arial, sans-serif" font-size="16" font-weight="700">Primary effect</text>
+  <text x="1060" y="244" text-anchor="middle" fill="#1E293B" font-family="Arial, sans-serif" font-size="16" font-weight="700">Output files</text>
+</svg>

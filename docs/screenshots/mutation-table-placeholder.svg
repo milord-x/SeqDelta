@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1280" y2="720" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F8FAFC"/>
+      <stop offset="1" stop-color="#EEF2F7"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="720" fill="url(#bg)"/>
+  <rect x="96" y="72" width="1088" height="576" rx="28" fill="white" fill-opacity="0.82"/>
+  <rect x="136" y="160" width="1008" height="56" rx="18" fill="#EFF6FF"/>
+  <rect x="136" y="244" width="1008" height="52" rx="14" fill="#FFFBEB"/>
+  <rect x="136" y="312" width="1008" height="52" rx="14" fill="#FFF7ED"/>
+  <rect x="136" y="380" width="1008" height="52" rx="14" fill="#F5F3FF"/>
+  <text x="136" y="122" fill="#0F172A" font-family="Arial, sans-serif" font-size="30" font-weight="700">Mutation Table</text>
+  <text x="136" y="462" fill="#64748B" font-family="Arial, sans-serif" font-size="18">Placeholder for the nucleotide mutation table with effect labels and filters</text>
+  <text x="176" y="194" fill="#334155" font-family="Arial, sans-serif" font-size="18" font-weight="700">ID | Position | Ref | Mut | Type | Codon | AA | Effect</text>
+</svg>

@@ -234,6 +234,25 @@ def _first_frameshift_codon(mutations: list[NucleotideMutation]) -> int | None:
     return min(candidates) if candidates else None
 
 
+def _build_warnings(reference: SequenceRecordData, mutant: SequenceRecordData) -> list[str]:
+    warnings: list[str] = []
+    if reference.length % 3 != 0:
+        warnings.append(
+            f"Reference sequence length ({reference.length} nt) is not divisible by 3. "
+            "Translation uses only complete codons."
+        )
+    if mutant.length % 3 != 0:
+        warnings.append(
+            f"Mutant sequence length ({mutant.length} nt) is not divisible by 3. "
+            "Translation uses only complete codons."
+        )
+    if max(reference.length, mutant.length) >= 10000:
+        warnings.append(
+            "Large sequence warning: current global alignment is in-memory and may be slow on long inputs."
+        )
+    return warnings
+
+
 def analyze_records(reference: SequenceRecordData, mutant: SequenceRecordData) -> AnalysisResult:
     alignment = align_sequences(reference.sequence, mutant.sequence)
     nucleotide_mutations = _detect_nucleotide_mutations(alignment, reference.sequence, mutant.sequence)
@@ -246,6 +265,7 @@ def analyze_records(reference: SequenceRecordData, mutant: SequenceRecordData) -
         nucleotide_mutations=nucleotide_mutations,
         codon_changes=build_codon_comparisons(reference.sequence, mutant.sequence, first_frameshift_codon),
         amino_acid_changes=build_amino_acid_comparisons(reference.sequence, mutant.sequence, first_frameshift_codon),
+        warnings=_build_warnings(reference, mutant),
     )
     result.summary = _build_summary(result)
     return result

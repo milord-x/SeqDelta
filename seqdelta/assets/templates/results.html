@@ -32,6 +32,16 @@
       <h2>Analysis context</h2>
       <p>File names and FASTA headers are shown separately so identical NCBI sequence names do not hide which input is reference and which is mutant.</p>
     </div>
+    {% if warnings %}
+    <div class="list-card">
+      <span class="context-label">Analysis warnings</span>
+      <ul class="plain-list">
+        {% for warning in warnings %}
+        <li>{{ warning }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
     <div class="input-grid">
       <article class="context-card">
         <span class="context-label">Reference file</span>
