@@ -35,6 +35,80 @@ After installation, the primary interface is the `seqdelta` command:
 seqdelta compare reference.fasta mutant.fasta --html-report report.html
 ```
 
+## Download and Setup
+
+Choose the setup path that matches how you want to use SeqDelta.
+
+### Option 1: Download the source code
+
+Clone the repository if you want the full project locally:
+
+```bash
+cd /home/proxy/Projects
+git clone https://github.com/milord-x/SeqDelta.git
+cd SeqDelta
+```
+
+This gives you:
+
+- the full source code
+- the example FASTA files
+- the local web interface
+- the test suite
+
+### Option 2: Install only the CLI
+
+If you only want the command-line tool:
+
+```bash
+pip install git+https://github.com/milord-x/SeqDelta.git
+```
+
+Then run:
+
+```bash
+seqdelta compare reference.fasta mutant.fasta --html-report report.html
+```
+
+### Option 3: Full local setup for CLI + web
+
+If you want the repository locally and also want a clean environment for both CLI and the local web app:
+
+```bash
+cd /home/proxy/Projects
+git clone https://github.com/milord-x/SeqDelta.git
+cd SeqDelta
+python -m venv .venv
+source .venv/bin/activate
+pip install -e .
+```
+
+After that:
+
+- CLI works with `seqdelta compare ...`
+- the local web app works with `python app.py`
+
+### Verify the installation
+
+Check that the CLI is available:
+
+```bash
+seqdelta --help
+seqdelta compare --help
+```
+
+Launch the local web app:
+
+```bash
+python app.py
+```
+
+Then open:
+
+```text
+http://127.0.0.1:8000
+```
+
 ## Quick Demo
 
 Run the included missense example:
