@@ -54,7 +54,7 @@ git clone https://github.com/milord-x/SeqDelta.git
 cd SeqDelta
 python -m venv .venv
 source .venv/bin/activate
-pip install -e .
+pip install -e .[dev]
 ```
 
 Verify the install:
@@ -62,6 +62,7 @@ Verify the install:
 ```bash
 seqdelta --help
 seqdelta compare --help
+pytest
 ```
 
 ## Quick Demo
@@ -124,12 +125,7 @@ Development fixtures are kept in [sample_data/](sample_data/).
 
 ![Demo](screenshots/recording.gif)
 
-Recommended real captures:
-
-- upload page
-- results dashboard
-- mutation table
-- mutation-focused alignment view
+The current recording shows the browser workflow end to end. Additional still screenshots can be added later for the upload page, results dashboard, mutation table, and alignment view.
 
 ## Project Structure
 
